@@ -1,24 +1,33 @@
-const {response } = require(`express`)
+const {response,request } = require(`express`)
 
  
 
-const getUsuario = (req, res = response ) => {
+const getUsuario = (req = request, res = response ) => {
+
+    const query = req.query;   
     res.json({
-        msg: `get api`
+        msg: `get api`,
+        query
+    });
+}
+
+
+const postUsuario = (req, res = response ) => {
+    const body = req.body;
+    res.json({
+        msg: `post api`,
+        body
     });
 }
 
 const putUsuario = (req, res = response ) => {
+    const {id} = req.params;
     res.json({
-        msg: `put api`
+        msg: `put api`,
+        id
     });
 }
 
-const postUsuario = (req, res = response ) => {
-    res.json({
-        msg: `post api`
-    });
-}
 const patchUsuario = (req, res = response ) => {
     res.json({
         msg: `patch api`

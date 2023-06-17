@@ -9,7 +9,7 @@ const router = Router();
 
 router.get('/', getUsuario);
 
-router.put('/', putUsuario);
+router.put('/:id', putUsuario);
 
 router.post('/', postUsuario);
 
