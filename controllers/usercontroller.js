@@ -3,12 +3,25 @@ const bcryptjs = require(`bcryptjs`);
 const Usuario = require(`../models/usuariodb`);
 
 
-const getUsuario = (req = request, res = response ) => {
+const getUsuario = async(req = request, res = response ) => {
 
-    const query = req.query;   
+    const {limite = 5,desde = 0} = req.query;  
+    const query = {estado: true}
+
+    // const usuarios = await Usuario.find()
+    //     .skip(Number(desde))
+    //     .limit(Number(limite));
+    // const total = await Usuario.countDocuments();
+
+    const [total,usuarios] = await Promise.all([
+        Usuario.countDocuments(query),
+        Usuario.find(query)
+        .skip(Number(desde))
+        .limit(Number(limite))
+    ])
     res.json({
-        msg: `get api`,
-        query
+        total,
+        usuarios
     });
 }
 
@@ -55,10 +68,13 @@ const patchUsuario = (req, res = response ) => {
     });
 }
 
-const deleUsuario = (req, res = response ) => {
-    res.json({
-        msg: `delete api`
-    });
+const deleUsuario = async(req, res = response ) => {
+
+    const {id} = req.params;
+    //const usuarioo = await Usuario.findByIdAndDelete(id)
+    const usuario = await Usuario.findByIdAndUpdate(id,{estado:false})
+    const userverificado = req.usuario;
+    res.json({usuario,userverificado});
 }
 
 
