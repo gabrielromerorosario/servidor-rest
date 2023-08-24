@@ -13,7 +13,8 @@ class Server {
             buscar:     '/api/buscar',
             categoria:  '/api/categoria',
             producto:   '/api/producto',
-            userPath:   '/api/user'
+            userPath:   '/api/user',
+            uploads:   '/api/uploads'
         }
 
 
@@ -44,11 +45,12 @@ class Server {
     }
 
     routes() {
-        this.app.use(this.paths.authPath, require('../routes/auth'))
-        this.app.use(this.paths.buscar, require('../routes/buscar'))
-        this.app.use(this.paths.categoria, require('../routes/categorias'))
-        this.app.use(this.paths.producto, require('../routes/productos'))
-        this.app.use(this.paths.userPath, require('../routes/user'))
+        this.app.use(this.paths.authPath, require('../routes/auth'));
+        this.app.use(this.paths.buscar, require('../routes/buscar'));
+        this.app.use(this.paths.categoria, require('../routes/categorias'));
+        this.app.use(this.paths.producto, require('../routes/productos'));
+        this.app.use(this.paths.userPath, require('../routes/user'));
+        this.app.use(this.paths.uploads, require('../routes/uploads'));
 
     }
 
