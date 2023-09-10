@@ -2,19 +2,29 @@ const TicketControl = require('../models/ticket-controller')
 
 
 const ticketcontrol = new TicketControl();
+
+
 const socketController = (socket) => {
-    console.log('Cleinte Conectado', socket.id)    
 
-    socket.on('disconnect', () => {
-        console.log('Cleinte Desconectado', socket.id)
+    socket.emit('ultimo-ticket',ticketcontrol.ultimo);
+
+    socket.on('siguiente-ticket', (payload, callback) => {
+       const siguiente = ticketcontrol.siguiente();
+       callback(siguiente);
+
     })
 
-    socket.on('enviar-mensaje', (payload, callback) => {
-        const id = 123456
-
-        callback(id)
-        socket.broadcast.emit('enviar-mensaje', payload)
-    })
+    socket.on('atender-ticket', (escritorio, callback) => {
+      
+        if (!escritorio) {
+            return callback({
+                ok:false,
+                msg:'El escritorio es obligatorio'
+            })
+            
+        }
+ 
+     })
 }
 
 module.exports = {
