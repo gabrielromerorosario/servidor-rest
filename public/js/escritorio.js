@@ -1,8 +1,11 @@
 
-const lblescritorio  =  document.querySelector('h1');
-const btnAtender  =  document.querySelector('button');
-const lblNuevoTicket  =  document.querySelector('#lblNuevoTicket');
-const btnCRear  =  document.querySelector('button');
+const lblescritorio = document.querySelector('h1');
+const btnAtender = document.querySelector('button');
+const lblNuevoTicket = document.querySelector('#lblNuevoTicket');
+const lblTicket = document.querySelector('small');
+const btnCRear = document.querySelector('button');
+const divalert = document.querySelector('.alert');
+const lblPendientes = document.querySelector('#lblPendientes')
 
 const searchPArams = new URLSearchParams(window.location.search);
 
@@ -15,38 +18,55 @@ if (!searchPArams.has('escritorio')) {
 const escritorio = searchPArams.get('escritorio');
 
 lblescritorio.innerText = escritorio;
+divalert.style.display = 'none';
+
+
 
 
 
 
 const cliente = io();
 
-cliente.on('connect',() => {
+cliente.on('connect', () => {
 
     btnAtender.disabled = false;
- 
+
+});
+
+
+
+
+
+cliente.on('ticket-pendiente', (ticketPendiente) => {
+    if (ticketPendiente === 0) {
+        lblPendientes.style.display = 'none';
+    } else {
+        lblPendientes.style.display = '';
+        lblPendientes.innerText = ticketPendiente;
+    }
+
 });
 
 
 
-cliente.on('disconnect',() => {
 
-    btnAtender.disabled = true;
 
-});
-
-cliente.on('ultimo-ticket', (ticket) => {
-    //lblNuevoTicket.innerText = 'Ticket  ' + ticket;
-});
+btnAtender.addEventListener('click', () => {
 
 
 
+    cliente.emit('atender-ticket', { escritorio }, ({ ok, ticket ,ticketPendiente}) => {
+        if (!ok) {
+            lblTicket.innerText = `N/A`;
 
-btnAtender.addEventListener('click',() => {
+            return divalert.style.display = '';
 
-    
-    
-    cliente.emit('atender-ticket', {escritorio},(payload) => {
-        console.log(payload)
+        }
+        lblTicket.innerText = `Ticket  ${ticket.numero}`;
+        lblPendientes.innerText = ticketPendiente;
+
+
+
+
     });
 })
